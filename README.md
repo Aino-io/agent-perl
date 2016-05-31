@@ -11,20 +11,32 @@ Perl implementation of Aino.io logging agent
 Aino.io works by analyzing transactions between enterprise applications and other pieces of software. This Agent helps to store data about the transactions to Aino.io platform using Aino.io Data API (version 2.0). See [API documentation](http://www.aino.io/api) for detailed information about the API.
 
 
-# Requirements
+## Technical requirements
+* Perl 5
+
 Agent requires some external libraries:
 * `LWP::Protocol::https`
 * `Proc::Daemon`
 
-### Running tests
-* `Test::Deep::NoTest`
+## Example usage
 
+#### Minimal example (only required fields)
 
-# How to use
-This agent can be used as perl library or from command line.
+```perl
+require "path/to/aino/AinoLib.pm";
 
+Aino::Lib->set_api_key('YOUR API KEY HERE');
 
-### Logging using Perl
+my $message = Aino::Lib->new_aino_transaction();
+
+$message->set_to('To application')
+        ->set_from('From application')
+        ->set_status('success')
+
+Aino::Lib->send_transaction($message);
+```
+
+#### Full example
 
 ```perl
 require "path/to/aino/AinoLib.pm";
@@ -51,31 +63,17 @@ my $fork = 1;   # Fork the sending to background process with 1.
 Aino::Lib->send_transaction($message, $fork);
 ```
 
-### Logging from command line
-You can use this from command line also.
+This agent can also be used from command line.
+
+##### Logging from command line
+
 ```bash
 perl aino-agent.pl
     --from "From application" \
     --to "To application" \
-    --flowId "flowId" \
     --status "failure" \
-    --operation "Business operation 1" \
-    --ids "IdType=12351,55112,42141,88813" \
-    --ids "IdType2=041FA,8A5B3" \
-    --metadata "Field=Value" \
-    --message "Human readable explanation" \
-    --payloadType "Invoices" \
     --apikey "YOU API KEY HERE" \
-    --no_gzip
 ```
-
-### Running tests
-The tests can be run by executing:
-```bash
-cd $AINO_PERL_AGENT_PATH
-perl tests/RunTests.pm
-```
-where `$AINO_PERL_AGENT_PATH` is the path where you cloned the repository.
 
 # What to use as flow ID
 The flow ID, also known as correlation ID or correlation key is an identifier that allows aino
@@ -89,7 +87,13 @@ $msg->set_flowId('desired flow id');
 ```
 Calling `Aino::Lib->clear_flow_id` will clear the flow id set in `Aino::Lib->init_flow_id`.
 
-## Contributors
+## Contributing
+
+### Technical Requirements
+Same as above, but also this for running tests:
+* `Test::Deep::NoTest`
+
+### Contributors
 
 * [Jussi Mikkonen](https://github.com/jussi-mikkonen)
 * [Ville Harvala](https://github.com/vharvala)
