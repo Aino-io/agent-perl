@@ -34,7 +34,7 @@ $message->set_to('To application')
         ->set_status('success')
         ->set_flowId('aka.correlationId')
 
-Aino::Lib->send_transaction($message, $fork);
+Aino::Lib->send_transaction($message);
 ```
 
 #### Full example
