@@ -32,7 +32,6 @@ my $message = Aino::Lib->new_aino_transaction();
 $message->set_to('To application')
         ->set_from('From application')
         ->set_status('success')
-        ->set_flowId('aka.correlationId')
 
 Aino::Lib->send_transaction($message);
 ```
