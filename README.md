@@ -31,7 +31,7 @@ my $message = Aino::Lib->new_aino_transaction();
 
 $message->set_to('To application')
         ->set_from('From application')
-        ->set_status('success')
+        ->set_status('success');
 
 Aino::Lib->send_transaction($message);
 ```
@@ -43,6 +43,7 @@ require "path/to/aino/AinoLib.pm";
 
 Aino::Lib->set_api_key('YOUR API KEY HERE');
 Aino::Lib->set_gzip_enabled(1);
+Aino::Lib->set_proxy_addr('http://internal.proxy.address:port');
 
 my $message = Aino::Lib->new_aino_transaction();
 

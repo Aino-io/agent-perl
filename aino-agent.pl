@@ -27,6 +27,7 @@ my $api_address = "https://data.aino.io/rest/v2.0/transaction";
 my $api_key = "";
 my $use_fork = 0;
 my $gzip_enabled = 1;
+my $proxy_address;
 
 my %fields = ();
 
@@ -47,7 +48,8 @@ Options:
     --metadata      Sets metadata (key=value)
     --payloadType   Sets payload type
     --fork          Sends the HTTP request in background process
-    --no_gzip       Disable gzipping of the payload (Enabled by default)
+    --no_gzip       Disable gzipping of the payload (enabled by default)
+    --proxy         Sets the proxy server to use
 
 
 Example:
@@ -58,6 +60,7 @@ Example:
         --apikey "APIKEYHERE" \\
         --ids "InvoiceNumbers=12412311,12355991"
         --no_gzip
+        --proxy "http://localhost:3128"
 
 STOPPA
     exit(0);
@@ -98,6 +101,11 @@ sub apikey_handler {
     $api_key = $apikey;
 }
 
+sub proxy_handler {
+  my ($opt_name, $proxy_addr) = @_;
+  $proxy_address = $proxy_addr;
+}
+
 sub gzip_handler {
     $gzip_enabled = 0;
 }
@@ -111,6 +119,7 @@ GetOptions(
     'payloadType=s',
     'flowId=s',
     'operation=s',
+    'proxy=s' => \&proxy_handler,
     'ids=s@' => \&id_handler,
     'metadata=s%' => \&meta_handler,
     'fork' => \&fork_handler,
@@ -126,6 +135,10 @@ my $msg = Aino::Lib->new_aino_transaction();
 
 foreach my $key (keys %fields) {
     $msg->set($key, $fields{$key});
+}
+
+if (defined $proxy_address) {
+    Aino::Lib->set_proxy_addr($proxy_address);
 }
 
 Aino::Lib->set_api_key($api_key);

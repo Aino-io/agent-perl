@@ -32,6 +32,7 @@ our $userAgent = LWP::UserAgent->new();
 our $api_address = "https://data.aino.io/rest/v2.0/transaction";
 our $api_key;
 our $gzip_enabled = 1;
+our $proxy_address;
 
 sub new_aino_transaction {
     return Aino::Message->new;
@@ -54,6 +55,13 @@ sub set_gzip_enabled {
 sub set_api_address {
     my ($self, $addr) = @_;
     $api_address = $addr;
+}
+
+sub set_proxy_addr {
+    my ($self, $addr) = @_;
+    $proxy_address = $addr;
+    #$userAgent->ssl_opts('verify_hostname' => 0);
+    $userAgent->proxy(['https', 'http'], $proxy_address);
 }
 
 sub set_api_key {
@@ -107,7 +115,6 @@ sub send_transaction {
     }
 
     if($use_fork) {
-        print "Forking the send!";
         my $daemon = Proc::Daemon->new({work_dir => $dirname});
         my $pid = $daemon->Init;
 
