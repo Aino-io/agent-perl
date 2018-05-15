@@ -130,6 +130,9 @@ sub send_transaction {
 
     if($response->code ne 202) {
         print STDERR "Got non success response code: " . $response->code . " " . $response->message . "\n";
+        print STDERR "AINO_ERROR_START"."\n";
+        print STDERR $payload."\n";
+        print STDERR "AINO_ERROR_END"."\n";
     }
 
     if($use_fork) {

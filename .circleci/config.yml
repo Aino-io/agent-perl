@@ -1,0 +1,15 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: perl:5.24
+    steps:
+      - checkout
+      # add used perl  modules
+      - run: cpanm JSON
+      - run: cpanm --quiet --notest --skip-satisfied Proc::Daemon  TAP::Formatter::JUnit  Test::Deep::NoTest 
+      # Run tests
+      - run: prove -v --formatter TAP::Formatter::JUnit tests/RunTests.pm | tee TEST_perl.xml
+      # store unit-test results
+      #- store_artifacts:
+      #    path: TEST_perl.xml
